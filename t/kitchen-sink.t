@@ -24,16 +24,6 @@ my %resolver_for = (
   }),
 );
 
-my $prefix = "$prr\::Mux::Prefix"->new({
-  prefixes => \%resolver_for,
-});
-
-my $order  = "$prr\::Mux::Ordered"->new({
-  resolvers => [
-    (map {; $resolver_for{$_} } qw(fs dist data tar)),
-  ],
-});
-
 for my $type (qw(fs data tar)) {
   like(
     ${ $resolver_for{ $type }->content_for('raven.txt') },
@@ -56,3 +46,53 @@ for my $type (qw(fs data tar)) {
   my @content = $resolver_for{ $type }->content_for('404.html');
   is(@content, 0, "$type: return false for no-such-entry");
 }
+
+my $order = "$prr\::Mux::Ordered"->new({
+  resolvers => [
+    (map {; $resolver_for{$_} } qw(fs data tar)),
+  ],
+});
+
+for my $type (qw(fs data tar)) {
+  is(
+    ${ $order->content_for("$type.txt") },
+    "Resolver of type $type\n",
+    "ordered: $type: the unique $type.txt file",
+  );
+}
+
+is(
+  ${ $order->content_for('now.playing') },
+  "H. by Tool\n",
+  'ordered: find fs before data',
+);
+
+my $rev_order = "$prr\::Mux::Ordered"->new({
+  resolvers => [
+    reverse (map {; $resolver_for{$_} } qw(fs data tar)),
+  ],
+});
+
+is(
+  ${ $rev_order->content_for('now.playing') },
+  "Omaha by Counting Crows\n",
+  'ordered: find data before fs',
+);
+
+my $prefix = "$prr\::Mux::Prefix"->new({
+  prefixes => \%resolver_for,
+});
+
+is(
+  ${ $prefix->content_for('/data/now.playing') },
+  "Omaha by Counting Crows\n",
+  'ordered: /data/now.playing -> DataSection resolver',
+);
+
+is(
+  ${ $prefix->content_for('/fs/now.playing') },
+  "H. by Tool\n",
+  'ordered: /fs/now.playing -> FileSystem resolver',
+);
+
+

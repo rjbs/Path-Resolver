@@ -11,6 +11,13 @@ has resolvers => (
 
 sub content_for {
   my ($self, $path) = @_;
+
+  for my $resolver ($self->resolvers) {
+    next unless my $ref = $resolver->content_for($path);
+    return $ref;
+  }
+
+  return;
 }
   
 

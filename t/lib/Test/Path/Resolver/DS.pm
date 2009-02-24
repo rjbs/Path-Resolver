@@ -16,3 +16,5 @@ __[ data.txt ]__
 Resolver of type data
 __[ quotes/raven.txt ]__
 Nevermore!
+__[ now.playing ]__
+Omaha by Counting Crows
