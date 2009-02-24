@@ -26,6 +26,14 @@ requires 'content_for';
 around content_for => sub {
   my ($orig, $self, $path) = @_;
   return $self->$orig($path) if ref $path;
+
+  Carp::confess("invalid path: empty") unless defined $path and length $path;
+  Carp::confess("invalid path: ends in /") if $path =~ m{/\z};
+
+  my @input_path = File::Spec::Unix->splitdir($path);
+  my @return_path;
+
+  push @return_path, (shift @input_path) if $input_path[0] eq '';
   return $self->$orig([ 
     File::Spec::Unix->splitdir($path)
   ]);

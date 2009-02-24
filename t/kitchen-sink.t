@@ -16,7 +16,7 @@ use lib 't/lib';
 my $prr  = 'Path::Resolver::Resolver';
 my %resolver_for = (
   fs   => "$prr\::FileSystem"->new({ root => 't/eg/fs' }),
-  dist => "$prr\::DistDir"->new({ dist => 'Path-Resolver' }),
+  dist => "$prr\::DistDir"->new({ dist_name => 'Path-Resolver' }),
   data => "$prr\::DataSection"->new({ module => 'Test::Path::Resolver::DS' }),
   tar  => "$prr\::Archive::Tar"->new({
     archive => 't/eg/archive.tar',
