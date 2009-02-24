@@ -25,18 +25,25 @@ requires 'content_for';
 
 around content_for => sub {
   my ($orig, $self, $path) = @_;
-  return $self->$orig($path) if ref $path;
+  my @input_path;
 
-  Carp::confess("invalid path: empty") unless defined $path and length $path;
-  Carp::confess("invalid path: ends in /") if $path =~ m{/\z};
+  if (ref $path) {
+    @input_path = @$path;
+  } else {
+    Carp::confess("invalid path: empty") unless defined $path and length $path;
 
-  my @input_path = File::Spec::Unix->splitdir($path);
+    @input_path = File::Spec::Unix->splitdir($path);
+  }
+
+  Carp::confess("invalid path: empty") unless @input_path;
+  Carp::confess("invalid path: ends with non-filename")
+    if $input_path[-1] eq '';
+
   my @return_path;
-
   push @return_path, (shift @input_path) if $input_path[0] eq '';
-  return $self->$orig([ 
-    File::Spec::Unix->splitdir($path)
-  ]);
+  push @return_path, grep { defined $_ and length $_ } @input_path;
+
+  return $self->$orig(\@return_path);
 };
 
 no Moose::Role;
