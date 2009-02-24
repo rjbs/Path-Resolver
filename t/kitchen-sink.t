@@ -86,13 +86,38 @@ my $prefix = "$prr\::Mux::Prefix"->new({
 is(
   ${ $prefix->content_for('/data/now.playing') },
   "Omaha by Counting Crows\n",
-  'ordered: /data/now.playing -> DataSection resolver',
+  'prefix: /data/now.playing -> DataSection resolver',
 );
 
 is(
   ${ $prefix->content_for('/fs/now.playing') },
   "H. by Tool\n",
-  'ordered: /fs/now.playing -> FileSystem resolver',
+  'prefix: /fs/now.playing -> FileSystem resolver',
 );
 
+is($prefix->content_for('now.playing'), undef, 'no content for relative name');
 
+my $prefix_with_relative = "$prr\::Mux::Prefix"->new({
+  prefixes          => \%resolver_for,
+  relative_resolver => "$prr\::Mux::Ordered"->new({
+    resolvers => [ (map {; $resolver_for{$_} } qw(fs data tar)) ],
+  }),
+});
+
+is(
+  ${ $prefix_with_relative->content_for('/data/now.playing') },
+  "Omaha by Counting Crows\n",
+  'prefix-with-rel: /data/now.playing -> DataSection resolver',
+);
+
+is(
+  ${ $prefix_with_relative->content_for('/fs/now.playing') },
+  "H. by Tool\n",
+  'prefix-with-rel: /fs/now.playing -> FileSystem resolver',
+);
+
+is(
+  ${ $prefix_with_relative->content_for('now.playing') },
+  "H. by Tool\n",
+  'prefix-with-rel: fs first'
+);
