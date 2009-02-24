@@ -1,16 +1,20 @@
 package Path::Resolver::Resolver::Mux::Prefix;
+# ABSTRACT: multiplex resolvers by using path prefix
 use Moose;
 with 'Path::Resolver::Role::Resolver';
+
+=attr prefixes
+
+This is a hashref of path prefixes with the resolver that should be used for
+paths under that prefix.  If a resolver is given for the empty prefix, it will
+be used for relative paths.  Otherwise, relative paths will always fail.
+
+=cut
 
 has prefixes => (
   is  => 'ro',
   isa => 'HashRef',
   required => 1,
-);
-
-has relative_resolver => (
-  is   => 'ro',
-  does => 'Path::Resolver::Role::Resolver',
 );
 
 sub content_for {
@@ -27,9 +31,9 @@ sub content_for {
     return $resolver->content_for(\@path);
   }
 
-  return unless $self->relative_resolver;
+  return unless $self->prefixes->{''};
 
-  return $self->relative_resolver->content_for(\@path);
+  return $self->prefixes->{''}->content_for(\@path);
 }
 
 no Moose;

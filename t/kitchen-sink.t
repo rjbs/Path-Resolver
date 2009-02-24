@@ -98,10 +98,12 @@ is(
 is($prefix->content_for('now.playing'), undef, 'no content for relative name');
 
 my $prefix_with_relative = "$prr\::Mux::Prefix"->new({
-  prefixes          => \%resolver_for,
-  relative_resolver => "$prr\::Mux::Ordered"->new({
-    resolvers => [ (map {; $resolver_for{$_} } qw(fs data tar)) ],
-  }),
+  prefixes          => {
+    %resolver_for,
+    ''  => "$prr\::Mux::Ordered"->new({
+      resolvers => [ (map {; $resolver_for{$_} } qw(fs data tar)) ],
+    })
+  },
 });
 
 is(

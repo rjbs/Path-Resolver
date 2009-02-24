@@ -1,4 +1,5 @@
 package Path::Resolver::Resolver::Archive::Tar;
+# ABSTRACT: find content inside a tar archive
 use Moose;
 use Moose::Util::TypeConstraints;
 with 'Path::Resolver::Role::Resolver';
@@ -6,10 +7,13 @@ with 'Path::Resolver::Role::Resolver';
 use Archive::Tar;
 use File::Spec::Unix;
 
-has root => (
-  is => 'ro',
-  required => 0,
-);
+=attr archive
+
+This attribute stores the Archive::Tar object in which content will be
+resolved.  A simple string may be passed to the constructor to be used as an
+archive filename.
+
+=cut
 
 has archive => (
   is  => 'ro',
@@ -24,6 +28,19 @@ has archive => (
     
     $set->($archive);
   },
+);
+
+=attr root
+
+If given, this attribute specifies a root inside the archive under which to
+look.  This is useful when dealing with an archive in which all content is
+under a common directory.
+
+=cut
+
+has root => (
+  is => 'ro',
+  required => 0,
 );
 
 sub content_for {
