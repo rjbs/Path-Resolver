@@ -47,6 +47,12 @@ for my $type (qw(fs data tar)) {
     "$type: and also quotes/raven.txt",
   );
 
+  is(
+    ${ $resolver_for{ $type }->content_for("$type.txt") },
+    "Resolver of type $type\n",
+    "$type: the unique $type.txt file",
+  );
+
   my @content = $resolver_for{ $type }->content_for('404.html');
   is(@content, 0, "$type: return false for no-such-entry");
 }
