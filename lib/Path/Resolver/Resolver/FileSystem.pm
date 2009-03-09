@@ -5,6 +5,7 @@ with 'Path::Resolver::Role::Resolver';
 
 use Carp ();
 use File::Spec;
+use Path::Resolver::Util;
 
 =attr root
 
@@ -31,11 +32,7 @@ sub content_for {
     @$path,
   );
 
-  return unless -e $abs_path;
-
-  open my $fh, '<', $abs_path or Carp::confess("can't open $abs_path: $!");
-  my $content = do { local $/; <$fh> };
-  return \$content;
+  return Path::Resolver::Util->_content_at_abs_path($abs_path);
 }
 
 no Moose;

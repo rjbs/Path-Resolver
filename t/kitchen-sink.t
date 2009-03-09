@@ -4,10 +4,11 @@ use warnings;
 use Test::More 'no_plan';
 
 use Path::Resolver;
-use Path::Resolver::Resolver::FileSystem;
-use Path::Resolver::Resolver::DistDir;
-use Path::Resolver::Resolver::DataSection;
+use Path::Resolver::Resolver::AnyDist;
 use Path::Resolver::Resolver::Archive::Tar;
+use Path::Resolver::Resolver::DataSection;
+use Path::Resolver::Resolver::DistDir;
+use Path::Resolver::Resolver::FileSystem;
 use Path::Resolver::Resolver::Mux::Prefix;
 use Path::Resolver::Resolver::Mux::Ordered;
 
@@ -17,6 +18,7 @@ my $prr  = 'Path::Resolver::Resolver';
 my %resolver_for = (
   fs   => "$prr\::FileSystem"->new({ root => 't/eg/fs' }),
   dist => "$prr\::DistDir"->new({ dist_name => 'Path-Resolver' }),
+  cpan => "$prr\::AnyDist"->new,
   data => "$prr\::DataSection"->new({ module => 'Test::Path::Resolver::DS' }),
   tar  => "$prr\::Archive::Tar"->new({
     archive => 't/eg/archive.tar',
@@ -96,6 +98,12 @@ is(
 );
 
 is($prefix->content_for('now.playing'), undef, 'no content for relative name');
+
+like(
+  ${ $prefix->content_for('/cpan/File-ShareDir/sample.txt') },
+  qr{\AThis is a sample shared file\.},
+  "AnyDist works",
+);
 
 my $prefix_with_relative = "$prr\::Mux::Prefix"->new({
   prefixes          => {

@@ -1,10 +1,11 @@
 package Path::Resolver::Resolver::DistDir;
-# ABSTRACT: find content in a CPAN distribution's "ShareDir"
+# ABSTRACT: find content in a prebound CPAN distribution's "ShareDir"
 use Moose;
 with 'Path::Resolver::Role::Resolver';
 
 use File::ShareDir ();
 use File::Spec;
+use Path::Resolver::Util;
 
 =attr dist_name
 
@@ -29,11 +30,7 @@ sub content_for {
     File::Spec->catfile(@$path),
   );
 
-  return unless -e $abs_path;
-
-  open my $fh, '<', $abs_path or Carp::confess("can't open $abs_path: $!");
-  my $content = do { local $/; <$fh> };
-  return \$content;
+  return Path::Resolver::Util->_content_at_abs_path($abs_path);
 }
 
 no Moose;
