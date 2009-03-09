@@ -1,0 +1,7 @@
+Revision history for Path-Resolver
+
+2.000     2009-03-09
+          add AnyDist resolver for arbitrary ShareDirs
+
+1.000     2009-02-24
+          initial release
