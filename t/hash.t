@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More 'no_plan';
+use Test::More tests => 9;
 
 use Path::Resolver;
 use Path::Resolver::Resolver::Hash;
@@ -34,8 +34,19 @@ my $prh = Path::Resolver::Resolver::Hash->new({ hash => $hash });
 
 for my $path (qw(
   foo
-  t
   t/foo
+  /foo
+  /t/foo
+)) {
+  is(
+    $prh->content_for($path),
+    undef,
+    "no content for $path"
+  );
+}
+
+for my $path (qw(
+  t
   t/00-load.t/README
 )) {
   my $content;

@@ -40,10 +40,9 @@ sub content_for {
 
     my $entry = $cwd->{ $name};
 
-    Carp::confess("no such entry found: " . $self->__str_path($path))
-      unless defined $entry;
-
     if (! @path) {
+      return unless defined $entry;
+
       Carp::confess("not a leaf entity: " . $self->__str_path(\@path_so_far))
         if ref $entry;
 
