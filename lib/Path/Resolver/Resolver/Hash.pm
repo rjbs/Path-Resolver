@@ -21,22 +21,42 @@ has hash => (
   required => 1,
 );
 
+sub __str_path {
+  my ($self, $path) = @_;
+
+  my $str = join '/', map { my $part = $_; $part =~ s{/}{\\/}g; $part } @$path;
+}
+
 sub content_for {
   my ($self, $path) = @_;
 
   my @path = @$path;
   shift @path if $path[0] eq '';
 
-  Carp::confess("deep lookups not supported") if @path > 1;
+  my $cwd = $self->{hash};
+  my @path_so_far;
+  while (defined (my $name = shift @path)) {
+    push @path_so_far, $name;
 
-  my $fn = $path[0];
+    my $entry = $cwd->{ $name};
 
-  Carp::confess("no such entry found: $fn")
-    unless defined $self->hash->{ $fn };
+    Carp::confess("no such entry found: " . $self->__str_path($path))
+      unless defined $entry;
 
-  my $content = $self->hash->{ $fn };
+    if (! @path) {
+      Carp::confess("not a leaf entity: " . $self->__str_path(\@path_so_far))
+        if ref $entry;
 
-  return \$content;
+      return \$entry;
+    }
+
+    Carp::confess("not a parent entity: " . $self->__str_path(\@path_so_far))
+      unless ref $entry and ref $entry eq 'HASH';
+
+    $cwd = $entry;
+  }
+
+  Carp::confess("this should never be reached -- rjbs, 2009-04-28")
 }
 
 no Moose;
