@@ -53,8 +53,13 @@ for my $path (qw(
   my $ok  = eval { $content = $prh->content_for($path); 1 };
   my $err = $@;
 
-  my ($line) = split /\n/, $err;
-  $line =~ s/ at lib.+//;
-
-  ok(! $ok, "error: $path - $line");
+  is(
+    $content,
+    undef,
+    "no content for $path"
+  );
+#  my ($line) = split /\n/, $err;
+#  $line =~ s/ at lib.+//;
+#
+#  ok(! $ok, "error: $path - $line");
 }

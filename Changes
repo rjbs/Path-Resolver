@@ -1,5 +1,8 @@
 Revision history for Path-Resolver
 
+2.003     2009-04-29
+          dump exceptions for now; this clearly needs design work
+
 2.002     2009-04-29
           simplify some semantics; this still needs testing; specifically,
           relative-versus-absolute (should be the same) and what to do on

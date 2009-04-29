@@ -43,13 +43,15 @@ sub content_for {
     if (! @path) {
       return unless defined $entry;
 
-      Carp::confess("not a leaf entity: " . $self->__str_path(\@path_so_far))
-        if ref $entry;
+      return if ref $entry;
+      #Carp::confess("not a leaf entity: " . $self->__str_path(\@path_so_far))
+      #  if ref $entry;
 
       return \$entry;
     }
 
-    Carp::confess("not a parent entity: " . $self->__str_path(\@path_so_far))
+    # Carp::confess("not a parent entity: " . $self->__str_path(\@path_so_far))
+    return 
       unless ref $entry and ref $entry eq 'HASH';
 
     $cwd = $entry;
