@@ -3,6 +3,13 @@ package Path::Resolver::Resolver::Hash;
 use Moose;
 with 'Path::Resolver::Role::Resolver';
 
+use namespace::autoclean;
+
+use Moose::Util::TypeConstraints;
+use Path::Resolver::SimpleEntity;
+
+sub native_type { class_type('Path::Resolver::SimpleEntity') }
+
 use Carp ();
 
 =attr hash
@@ -27,7 +34,7 @@ sub __str_path {
   my $str = join '/', map { my $part = $_; $part =~ s{/}{\\/}g; $part } @$path;
 }
 
-sub content_for {
+sub entity_at {
   my ($self, $path) = @_;
 
   my @path = @$path;
@@ -47,7 +54,7 @@ sub content_for {
       #Carp::confess("not a leaf entity: " . $self->__str_path(\@path_so_far))
       #  if ref $entry;
 
-      return \$entry;
+      return Path::Resolver::SimpleEntity->new({ content_ref => \$entry });
     }
 
     # Carp::confess("not a parent entity: " . $self->__str_path(\@path_so_far))
