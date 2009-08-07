@@ -6,7 +6,7 @@ use namespace::autoclean;
 
 use MooseX::AttributeHelpers;
 use MooseX::Types;
-use MooseX::Types::Moose qw(ArrayRef);
+use MooseX::Types::Moose qw(Any ArrayRef);
 
 =attr resolvers
 
@@ -31,6 +31,7 @@ has resolvers => (
 has native_type => (
   is  => 'ro',
   isa => class_type('Moose::Meta::TypeConstraint'),
+  default  => Any,
   required => 1,
 );
 
