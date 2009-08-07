@@ -3,10 +3,11 @@ package Path::Resolver::Resolver::FileSystem;
 use Moose;
 with 'Path::Resolver::Role::FileResolver';
 
+use namespace::autoclean;
+
 use Carp ();
 use Cwd ();
 use File::Spec;
-use Path::Resolver::Util;
 
 =attr root
 
@@ -39,5 +40,4 @@ sub entity_at {
   Path::Class::File->new($abs_path);
 }
 
-no Moose;
-__PACKAGE__->meta->make_immutable;
+1;

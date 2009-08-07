@@ -2,6 +2,8 @@ package Path::Resolver::Role::Resolver;
 # ABSTRACT: resolving paths is just what resolvers do!
 use Moose::Role;
 
+use namespace::autoclean;
+
 use File::Spec::Unix;
 use MooseX::Types;
 
@@ -79,8 +81,11 @@ sub default_converter { return }
 sub content_for {
   my ($self, $path) = @_;
   return unless my $entity = $self->entity_at($path);
+
+  confess "located entity can't perform the content_ref method"
+    unless $entity->can('content_ref');
+
   return $entity->content_ref;
 }
 
-no Moose::Role;
 1;

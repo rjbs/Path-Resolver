@@ -1,4 +1,5 @@
 package Path::Resolver::CustomConverter;
+# ABSTRACT: a one-off converter between any two types using a coderef
 use Moose;
 use namespace::autoclean;
 

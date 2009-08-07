@@ -2,6 +2,8 @@ package Path::Resolver::Types;
 use MooseX::Types -declare => [ qw(AbsFilePath) ];
 use MooseX::Types::Moose qw(Str);
 
+use namespace::autoclean;
+
 use Path::Class::File;
 
 subtype AbsFilePath,
@@ -10,5 +12,4 @@ subtype AbsFilePath,
 
 coerce AbsFilePath, from Str, via { Path::Class::File->new($_) };
 
-no MooseX::Types;
 1;

@@ -2,6 +2,8 @@ package Path::Resolver::Resolver::Mux::Ordered;
 # ABSTRACT: multiplex resolvers by checking them in order
 use Moose;
 
+use namespace::autoclean;
+
 use MooseX::AttributeHelpers;
 use MooseX::Types;
 use MooseX::Types::Moose qw(ArrayRef);
@@ -46,5 +48,4 @@ sub entity_at {
   return;
 }
   
-no Moose;
-__PACKAGE__->meta->make_immutable;
+1;

@@ -2,6 +2,8 @@ package Path::Resolver::Resolver::Mux::Prefix;
 # ABSTRACT: multiplex resolvers by using path prefix
 use Moose;
 
+use namespace::autoclean;
+
 use MooseX::AttributeHelpers;
 use MooseX::Types;
 use MooseX::Types::Moose qw(HashRef);
@@ -50,5 +52,4 @@ sub entity_at {
   return $resolver->entity_at(\@path);
 }
 
-no Moose;
-__PACKAGE__->meta->make_immutable;
+1;

@@ -3,9 +3,10 @@ package Path::Resolver::Resolver::DistDir;
 use Moose;
 with 'Path::Resolver::Role::FileResolver';
 
+use namespace::autoclean;
+
 use File::ShareDir ();
 use File::Spec;
-use Path::Resolver::Util;
 
 =attr dist_name
 
@@ -33,5 +34,4 @@ sub entity_at {
   return Path::Class::File->new($abs_path);
 }
 
-no Moose;
-__PACKAGE__->meta->make_immutable;
+1;

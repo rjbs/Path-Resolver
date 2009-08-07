@@ -3,6 +3,8 @@ package Path::Resolver::Resolver::DataSection;
 use Moose;
 with 'Path::Resolver::Role::Resolver';
 
+use namespace::autoclean;
+
 use File::Spec::Unix;
 use Moose::Util::TypeConstraints;
 use Path::Resolver::SimpleEntity;
@@ -61,5 +63,4 @@ sub entity_at {
   return Path::Resolver::SimpleEntity->new({ content_ref => $content_ref });
 }
 
-no Moose;
-__PACKAGE__->meta->make_immutable;
+1;

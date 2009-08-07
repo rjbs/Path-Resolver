@@ -4,6 +4,8 @@ use Moose;
 use Moose::Util::TypeConstraints;
 with 'Path::Resolver::Role::Resolver';
 
+use namespace::autoclean;
+
 use Archive::Tar;
 use File::Spec::Unix;
 use Path::Resolver::SimpleEntity;
@@ -60,6 +62,4 @@ sub entity_at {
   });
 }
 
-no Moose;
-no Moose::Util::TypeConstraints;
-__PACKAGE__->meta->make_immutable;
+1;

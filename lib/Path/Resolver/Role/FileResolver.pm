@@ -1,6 +1,9 @@
 package Path::Resolver::Role::FileResolver;
+# ABSTRACT: a resolver that natively finds absolute file paths
 use Moose::Role;
 with 'Path::Resolver::Role::Resolver' => { excludes => 'default_converter' };
+
+use namespace::autoclean;
 
 use Path::Resolver::SimpleEntity;
 use Path::Resolver::Types qw(AbsFilePath);
@@ -24,5 +27,4 @@ my $converter = Path::Resolver::CustomConverter->new({
 
 sub default_converter { $converter }
 
-no Moose::Role;
 1;

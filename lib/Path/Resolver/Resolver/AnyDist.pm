@@ -3,11 +3,11 @@ package Path::Resolver::Resolver::AnyDist;
 use Moose;
 with 'Path::Resolver::Role::FileResolver';
 
+use namespace::autoclean;
+
 use File::ShareDir ();
 use File::Spec;
 use Path::Class::File;
-
-# use Path::Resolver::Util;
 
 sub entity_at {
   my ($self, $path) = @_;
@@ -24,5 +24,4 @@ sub entity_at {
   return Path::Class::File->new($abs_path);
 }
 
-no Moose;
-__PACKAGE__->meta->make_immutable;
+1;

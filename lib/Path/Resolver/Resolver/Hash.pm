@@ -67,5 +67,4 @@ sub entity_at {
   Carp::confess("this should never be reached -- rjbs, 2009-04-28")
 }
 
-no Moose;
-__PACKAGE__->meta->make_immutable;
+1;
