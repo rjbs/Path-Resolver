@@ -33,6 +33,50 @@ what kind of object they'll return, and can be fitted with translators, it's
 easy to ensure that all your multiplexed resolvers will resolve names to the
 same kind of object.
 
+For example, we could overlay two search paths like this:
+
+  my $resolver = Path::Resolver::Resolver::Mux::Ordered->new({
+    resolvers => [
+      Path::Resolver::Resolver::FileSystem->new({ root => './config' }),
+      Path::Resolver::Resolver::Archive::Tar->new({ archive => 'config.tgz' }),
+    ],
+  });
+
+  $resolver->entity_at('/foo/bar.txt');
+
+This will return an entity representing F<./config/foo/bar.txt> if it exists.
+If it doesn't, it will look for F<foo/bar.txt> in the contents of the archive.
+If that's found, an entity will be returned.  Finally, if neither is found, it
+will return false.
+
+=head1 WHERE DO I GO NEXT?
+
+If you want to read about how to write a resolver, look at
+L<Path::Resolver::Role::Resolver|Path::Resolver::Role::Resolver>.
+
+If you want to read about the interfaces to the existing resolvers look at
+their documentation:
+
+=over
+
+=item * L<Path::Resolver::Resolver::AnyDist>
+
+=item * L<Path::Resolver::Resolver::Archive::Tar>
+
+=item * L<Path::Resolver::Resolver::DataSection>
+
+=item * L<Path::Resolver::Resolver::DistDir>
+
+=item * L<Path::Resolver::Resolver::FileSystem>
+
+=item * L<Path::Resolver::Resolver::Hash>
+
+=item * L<Path::Resolver::Resolver::Mux::Ordered>
+
+=item * L<Path::Resolver::Resolver::Mux::Prefix>
+
+=back
+
 =cut
 
 1;
