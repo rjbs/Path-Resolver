@@ -21,9 +21,10 @@ ending in /, which is a directory.
 
 =cut
 
-requires 'content_for';
+requires 'native_type';
+requires 'entity_at';
 
-around content_for => sub {
+around entity_at => sub {
   my ($orig, $self, $path) = @_;
   my @input_path;
 
@@ -43,8 +44,33 @@ around content_for => sub {
   push @return_path, (shift @input_path) if $input_path[0] eq '';
   push @return_path, grep { defined $_ and length $_ } @input_path;
 
-  return $self->$orig(\@return_path);
+  my $entity = $self->$orig(\@return_path);
+
+  return unless defined $entity;
+
+  my $native_type = $self->native_type;
+  if (my $error = $native_type->validate($entity)) {
+    warn ">> $entity <<";
+    confess $error;
+  }
+
+  return $entity unless my $conv = $self->converter;
+
+  return blessed $conv ? $conv->convert($entity) : $conv->($entity);
 };
+
+has converter => (
+  is      => 'ro',
+  builder => 'default_converter',
+);
+
+sub default_converter { return }
+
+sub content_for {
+  my ($self, $path) = @_;
+  return unless my $entity = $self->entity_at($path);
+  return $entity->content_ref;
+}
 
 no Moose::Role;
 1;

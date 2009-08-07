@@ -6,6 +6,9 @@ with 'Path::Resolver::Role::Resolver';
 
 use Archive::Tar;
 use File::Spec::Unix;
+use Path::Resolver::SimpleEntity;
+
+sub native_type { class_type('Path::Resolver::SimpleEntity') }
 
 =attr archive
 
@@ -43,7 +46,7 @@ has root => (
   required => 0,
 );
 
-sub content_for {
+sub entity_at {
   my ($self, $path) = @_;
   my $root = $self->root;
   my @root = (length $root) ? $root : ();
@@ -52,7 +55,9 @@ sub content_for {
   return unless $self->archive->contains_file($filename);
   my $content = $self->archive->get_content($filename);
 
-  return \$content;
+  Path::Resolver::SimpleEntity->new({
+    content_ref => \$content,
+  });
 }
 
 no Moose;

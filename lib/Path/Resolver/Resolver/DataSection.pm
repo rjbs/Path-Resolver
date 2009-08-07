@@ -4,6 +4,10 @@ use Moose;
 with 'Path::Resolver::Role::Resolver';
 
 use File::Spec::Unix;
+use Moose::Util::TypeConstraints;
+use Path::Resolver::SimpleEntity;
+
+sub native_type { class_type('Path::Resolver::SimpleEntity') }
 
 =head1 DESCRIPTION
 
@@ -45,7 +49,7 @@ sub BUILD {
   eval "require $module; 1" or die;
 }
 
-sub content_for {
+sub entity_at {
   my ($self, $path) = @_;
 
   my $filename = File::Spec::Unix->catfile(@$path);
@@ -53,7 +57,8 @@ sub content_for {
   my $content_ref = $self->module->$method($filename);
 
   return unless defined $content_ref;
-  return $content_ref;
+
+  return Path::Resolver::SimpleEntity->new({ content_ref => $content_ref });
 }
 
 no Moose;

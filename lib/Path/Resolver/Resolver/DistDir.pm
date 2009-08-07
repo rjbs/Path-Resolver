@@ -1,7 +1,7 @@
 package Path::Resolver::Resolver::DistDir;
 # ABSTRACT: find content in a prebound CPAN distribution's "ShareDir"
 use Moose;
-with 'Path::Resolver::Role::Resolver';
+with 'Path::Resolver::Role::FileResolver';
 
 use File::ShareDir ();
 use File::Spec;
@@ -21,7 +21,7 @@ has dist_name => (
   required => 1,
 );
 
-sub content_for {
+sub entity_at {
   my ($self, $path) = @_;
   my $dir = File::ShareDir::dist_dir($self->dist_name);
 
@@ -30,7 +30,7 @@ sub content_for {
     File::Spec->catfile(@$path),
   );
 
-  return Path::Resolver::Util->_content_at_abs_path($abs_path);
+  return Path::Class::File->new($abs_path);
 }
 
 no Moose;

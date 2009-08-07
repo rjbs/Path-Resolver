@@ -1,13 +1,15 @@
 package Path::Resolver::Resolver::AnyDist;
 # ABSTRACT: find content in any installed CPAN distribution's "ShareDir"
 use Moose;
-with 'Path::Resolver::Role::Resolver';
+with 'Path::Resolver::Role::FileResolver';
 
 use File::ShareDir ();
 use File::Spec;
-use Path::Resolver::Util;
+use Path::Class::File;
 
-sub content_for {
+# use Path::Resolver::Util;
+
+sub entity_at {
   my ($self, $path) = @_;
   my $dist_name = shift @$path;
   my $dir = File::ShareDir::dist_dir($dist_name);
@@ -19,7 +21,7 @@ sub content_for {
     File::Spec->catfile(@$path),
   );
 
-  return Path::Resolver::Util->_content_at_abs_path($abs_path);
+  return Path::Class::File->new($abs_path);
 }
 
 no Moose;

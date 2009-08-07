@@ -3,6 +3,8 @@ package Path::Resolver::Resolver::Mux::Ordered;
 use Moose;
 with 'Path::Resolver::Role::Resolver';
 
+use MooseX::Types::Moose qw(Any);
+
 =attr resolvers
 
 This is an array of other resolvers.  When asked for content, the Mux::Ordered
@@ -18,12 +20,15 @@ has resolvers => (
   auto_deref => 1,
 );
 
-sub content_for {
+sub native_type { Any } # XXX: So awful! -- rjbs, 2009-08-06
+
+sub entity_at {
   my ($self, $path) = @_;
 
   for my $resolver ($self->resolvers) {
-    next unless my $ref = $resolver->content_for($path);
-    return $ref;
+    my $entity = $resolver->entity_at($path);
+    next unless defined $entity;
+    return $entity;
   }
 
   return;
