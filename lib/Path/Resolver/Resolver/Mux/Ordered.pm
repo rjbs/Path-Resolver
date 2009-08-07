@@ -1,9 +1,10 @@
 package Path::Resolver::Resolver::Mux::Ordered;
 # ABSTRACT: multiplex resolvers by checking them in order
 use Moose;
-with 'Path::Resolver::Role::Resolver';
 
-use MooseX::Types::Moose qw(Any);
+use MooseX::AttributeHelpers;
+use MooseX::Types;
+use MooseX::Types::Moose qw(ArrayRef);
 
 =attr resolvers
 
@@ -15,12 +16,23 @@ content, or false if none finds any content.
 
 has resolvers => (
   is  => 'ro',
-  isa => 'ArrayRef',
+  isa => ArrayRef[ role_type('Path::Resolver::Role::Resolver') ],
   required   => 1,
   auto_deref => 1,
+  metaclass => 'Collection::Array',
+  provides  => {
+    push => 'push_resolver',
+    pop  => 'pop_resolver',
+  },
 );
 
-sub native_type { Any } # XXX: So awful! -- rjbs, 2009-08-06
+has native_type => (
+  is  => 'ro',
+  isa => class_type('Moose::Meta::TypeConstraint'),
+  required => 1,
+);
+
+with 'Path::Resolver::Role::Resolver';
 
 sub entity_at {
   my ($self, $path) = @_;

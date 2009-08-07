@@ -3,6 +3,7 @@ package Path::Resolver::Role::Resolver;
 use Moose::Role;
 
 use File::Spec::Unix;
+use MooseX::Types;
 
 =head1 DESCRIPTION
 
@@ -48,19 +49,28 @@ around entity_at => sub {
 
   return unless defined $entity;
 
-  my $native_type = $self->native_type;
-  if (my $error = $native_type->validate($entity)) {
-    warn ">> $entity <<";
-    confess $error;
+  if (my $conv = $self->converter) {
+    return $conv->convert($entity);
+  } else {
+    my $native_type = $self->native_type;
+
+    if (my $error = $native_type->validate($entity)) {
+      confess $error;
+    }
+
+    return $entity;
   }
-
-  return $entity unless my $conv = $self->converter;
-
-  return blessed $conv ? $conv->convert($entity) : $conv->($entity);
 };
+
+sub effective_type {
+  my ($self) = @_;
+  return $self->native_type unless $self->converter;
+  return $self->converter->output_type;
+}
 
 has converter => (
   is      => 'ro',
+  isa     => maybe_type( role_type('Path::Resolver::Role::Converter') ),
   builder => 'default_converter',
 );
 

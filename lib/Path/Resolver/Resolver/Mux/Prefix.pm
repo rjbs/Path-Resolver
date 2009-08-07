@@ -1,9 +1,10 @@
 package Path::Resolver::Resolver::Mux::Prefix;
 # ABSTRACT: multiplex resolvers by using path prefix
 use Moose;
-with 'Path::Resolver::Role::Resolver';
 
-use MooseX::Types::Moose qw(Any);
+use MooseX::AttributeHelpers;
+use MooseX::Types;
+use MooseX::Types::Moose qw(HashRef);
 
 =attr prefixes
 
@@ -15,11 +16,23 @@ be used for content that did not begin with registered prefix.
 
 has prefixes => (
   is  => 'ro',
-  isa => 'HashRef',
+  isa => HashRef[ role_type('Path::Resolver::Role::Resolver') ],
+  required  => 1,
+  metaclass => 'Collection::Hash',
+  provides  => {
+    set => 'set_resolver_for',
+    get => 'get_resolver_for',
+    delete => 'delete_resolver_for',
+  },
+);
+
+has native_type => (
+  is  => 'ro',
+  isa => class_type('Moose::Meta::TypeConstraint'),
   required => 1,
 );
 
-sub native_type { Any } # XXX: So awful! -- rjbs, 2009-08-06
+with 'Path::Resolver::Role::Resolver';
 
 sub entity_at {
   my ($self, $path) = @_;

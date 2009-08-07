@@ -4,20 +4,25 @@ with 'Path::Resolver::Role::Resolver' => { excludes => 'default_converter' };
 
 use Path::Resolver::SimpleEntity;
 use Path::Resolver::Types qw(AbsFilePath);
+use Path::Resolver::CustomConverter;
+
+use MooseX::Types;
 
 sub native_type { AbsFilePath }
 
-sub default_converter {
-  return sub {
-    my ($abs_path) = @_;
+my $converter = Path::Resolver::CustomConverter->new({
+  input_type  => AbsFilePath,
+  output_type => class_type('Path::Resolver::SimpleEntity'),
+  converter   => sub {
+    my ($converter, $abs_path) = @_;
 
     open my $fh, '<', "$abs_path" or Carp::confess("can't open $abs_path: $!");
     my $content = do { local $/; <$fh> };
-    Path::Resolver::SimpleEntity->new({
-      content_ref => \$content,
-    });
-  };
-}
+    Path::Resolver::SimpleEntity->new({ content_ref => \$content });
+  },
+});
+
+sub default_converter { $converter }
 
 no Moose::Role;
 1;
