@@ -9,6 +9,21 @@ use Carp ();
 use Cwd ();
 use File::Spec;
 
+=head1 SYNOPSIS
+
+  my $resolver = Path::Resolver::Resolver::FileSystem->new({
+    root => '/etc/myapp_config',
+  });
+
+  my $simple_entity = $resolver->entity_for('foo/bar.txt');
+
+This resolver looks for files on disk under the given root directory.
+
+This resolver does the
+L<Path::Resolver::Role::FileResolver|Path::Resolver::Role::FileResolver> role,
+meaning its native type is Path::Resolver::Types::AbsFilePath and it has a
+default converter to convert to Path::Resolver::SimpleEntity.
+
 =attr root
 
 This is the root on the filesystem under which to look.  If it is relative, it

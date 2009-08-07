@@ -10,6 +10,24 @@ use Archive::Tar;
 use File::Spec::Unix;
 use Path::Resolver::SimpleEntity;
 
+=head1 SYNOPSIS
+
+  my $resolver = Path::Resolver::Resolver::Archive::Tar->new({
+    archive => 'archive-file.tar.gz',
+  });
+
+  my $simple_entity = $resolver->entity_for('foo/bar.txt');
+
+This resolver looks for files inside a tar archive or a compressed tar archive.
+It uses L<Archive::Tar|Archive::Tar>, and can read any archive understood by
+that library.
+
+The native type of this resolver is a class type of
+L<Path::Resolver::SimpleEntity|Path::Resolver::SimpleEntity> and it has no
+default converter.
+
+=cut
+
 sub native_type { class_type('Path::Resolver::SimpleEntity') }
 
 =attr archive
@@ -57,9 +75,7 @@ sub entity_at {
   return unless $self->archive->contains_file($filename);
   my $content = $self->archive->get_content($filename);
 
-  Path::Resolver::SimpleEntity->new({
-    content_ref => \$content,
-  });
+  Path::Resolver::SimpleEntity->new({ content_ref => \$content });
 }
 
 1;

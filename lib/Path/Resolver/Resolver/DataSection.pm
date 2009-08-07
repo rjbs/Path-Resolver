@@ -11,13 +11,21 @@ use Path::Resolver::SimpleEntity;
 
 sub native_type { class_type('Path::Resolver::SimpleEntity') }
 
-=head1 DESCRIPTION
+=head1 SYNOPSIS
+
+  my $resolver = Path::Resolver::Resolver::DataSection->new({
+    module => 'YourApp::Config::InData',
+  });
+
+  my $simple_entity = $resolver->entity_for('foo/bar.txt');
 
 This class assumes that you will give it the name of another package and that
 that package uses L<Data::Section|Data::Section> to retrieve named content from
 its C<DATA> blocks and those of its parent classes.
 
-=cut
+The native type of this resolver is a class type of
+L<Path::Resolver::SimpleEntity|Path::Resolver::SimpleEntity> and it has no
+default converter.
 
 =attr module
 
