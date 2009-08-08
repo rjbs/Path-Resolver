@@ -12,6 +12,8 @@ use Path::Resolver::Resolver::FileSystem;
 use Path::Resolver::Resolver::Mux::Prefix;
 use Path::Resolver::Resolver::Mux::Ordered;
 
+use Moose::Util::TypeConstraints;
+
 use lib 't/lib';
 
 my $prr  = 'Path::Resolver::Resolver';
@@ -50,7 +52,8 @@ for my $type (qw(fs data tar)) {
 }
 
 my $order = "$prr\::Mux::Ordered"->new({
-  resolvers => [
+  native_type => class_type('Path::Resolver::SimpleEntity'),
+  resolvers   => [
     (map {; $resolver_for{$_} } qw(fs data tar)),
   ],
 });
@@ -70,7 +73,8 @@ is(
 );
 
 my $rev_order = "$prr\::Mux::Ordered"->new({
-  resolvers => [
+  native_type => class_type('Path::Resolver::SimpleEntity'),
+  resolvers   => [
     reverse (map {; $resolver_for{$_} } qw(fs data tar)),
   ],
 });
@@ -82,7 +86,8 @@ is(
 );
 
 my $prefix = "$prr\::Mux::Prefix"->new({
-  prefixes => \%resolver_for,
+  native_type => class_type('Path::Resolver::SimpleEntity'),
+  prefixes    => \%resolver_for,
 });
 
 is(
@@ -106,10 +111,12 @@ like(
 );
 
 my $prefix_with_relative = "$prr\::Mux::Prefix"->new({
-  prefixes          => {
+  native_type => class_type('Path::Resolver::SimpleEntity'),
+  prefixes    => {
     %resolver_for,
     ''  => "$prr\::Mux::Ordered"->new({
-      resolvers => [ (map {; $resolver_for{$_} } qw(fs data tar)) ],
+      native_type => class_type('Path::Resolver::SimpleEntity'),
+      resolvers   => [ (map {; $resolver_for{$_} } qw(fs data tar)) ],
     })
   },
 });

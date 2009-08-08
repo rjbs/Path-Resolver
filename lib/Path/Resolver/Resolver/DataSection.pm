@@ -3,15 +3,29 @@ package Path::Resolver::Resolver::DataSection;
 use Moose;
 with 'Path::Resolver::Role::Resolver';
 
-use File::Spec::Unix;
+use namespace::autoclean;
 
-=head1 DESCRIPTION
+use File::Spec::Unix;
+use Moose::Util::TypeConstraints;
+use Path::Resolver::SimpleEntity;
+
+sub native_type { class_type('Path::Resolver::SimpleEntity') }
+
+=head1 SYNOPSIS
+
+  my $resolver = Path::Resolver::Resolver::DataSection->new({
+    module => 'YourApp::Config::InData',
+  });
+
+  my $simple_entity = $resolver->entity_for('foo/bar.txt');
 
 This class assumes that you will give it the name of another package and that
 that package uses L<Data::Section|Data::Section> to retrieve named content from
 its C<DATA> blocks and those of its parent classes.
 
-=cut
+The native type of this resolver is a class type of
+L<Path::Resolver::SimpleEntity|Path::Resolver::SimpleEntity> and it has no
+default converter.
 
 =attr module
 
@@ -45,7 +59,7 @@ sub BUILD {
   eval "require $module; 1" or die;
 }
 
-sub content_for {
+sub entity_at {
   my ($self, $path) = @_;
 
   my $filename = File::Spec::Unix->catfile(@$path);
@@ -53,8 +67,8 @@ sub content_for {
   my $content_ref = $self->module->$method($filename);
 
   return unless defined $content_ref;
-  return $content_ref;
+
+  return Path::Resolver::SimpleEntity->new({ content_ref => $content_ref });
 }
 
-no Moose;
-__PACKAGE__->meta->make_immutable;
+1;

@@ -1,11 +1,28 @@
 package Path::Resolver::Resolver::FileSystem;
 # ABSTRACT: find files in the filesystem
 use Moose;
-with 'Path::Resolver::Role::Resolver';
+with 'Path::Resolver::Role::FileResolver';
+
+use namespace::autoclean;
 
 use Carp ();
+use Cwd ();
 use File::Spec;
-use Path::Resolver::Util;
+
+=head1 SYNOPSIS
+
+  my $resolver = Path::Resolver::Resolver::FileSystem->new({
+    root => '/etc/myapp_config',
+  });
+
+  my $simple_entity = $resolver->entity_for('foo/bar.txt');
+
+This resolver looks for files on disk under the given root directory.
+
+This resolver does the
+L<Path::Resolver::Role::FileResolver|Path::Resolver::Role::FileResolver> role,
+meaning its native type is Path::Resolver::Types::AbsFilePath and it has a
+default converter to convert to Path::Resolver::SimpleEntity.
 
 =attr root
 
@@ -17,14 +34,15 @@ will be resolved to an absolute path when the resolver is instantiated.
 has root => (
   is => 'rw',
   required    => 1,
+  default     => sub { Cwd::cwd },
   initializer => sub {
     my ($self, $value, $set) = @_;
-    my $abs_dir = File::Spec->abs2rel($value);
+    my $abs_dir = File::Spec->rel2abs($value);
     $set->($abs_dir);
   },
 );
 
-sub content_for {
+sub entity_at {
   my ($self, $path) = @_;
 
   my $abs_path = File::Spec->catfile(
@@ -32,8 +50,9 @@ sub content_for {
     @$path,
   );
 
-  return Path::Resolver::Util->_content_at_abs_path($abs_path);
+  return unless -e $abs_path and -f _;
+
+  Path::Class::File->new($abs_path);
 }
 
-no Moose;
-__PACKAGE__->meta->make_immutable;
+1;

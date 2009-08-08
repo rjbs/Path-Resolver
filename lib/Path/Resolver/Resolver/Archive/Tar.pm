@@ -4,8 +4,31 @@ use Moose;
 use Moose::Util::TypeConstraints;
 with 'Path::Resolver::Role::Resolver';
 
+use namespace::autoclean;
+
 use Archive::Tar;
 use File::Spec::Unix;
+use Path::Resolver::SimpleEntity;
+
+=head1 SYNOPSIS
+
+  my $resolver = Path::Resolver::Resolver::Archive::Tar->new({
+    archive => 'archive-file.tar.gz',
+  });
+
+  my $simple_entity = $resolver->entity_for('foo/bar.txt');
+
+This resolver looks for files inside a tar archive or a compressed tar archive.
+It uses L<Archive::Tar|Archive::Tar>, and can read any archive understood by
+that library.
+
+The native type of this resolver is a class type of
+L<Path::Resolver::SimpleEntity|Path::Resolver::SimpleEntity> and it has no
+default converter.
+
+=cut
+
+sub native_type { class_type('Path::Resolver::SimpleEntity') }
 
 =attr archive
 
@@ -43,7 +66,7 @@ has root => (
   required => 0,
 );
 
-sub content_for {
+sub entity_at {
   my ($self, $path) = @_;
   my $root = $self->root;
   my @root = (length $root) ? $root : ();
@@ -52,9 +75,7 @@ sub content_for {
   return unless $self->archive->contains_file($filename);
   my $content = $self->archive->get_content($filename);
 
-  return \$content;
+  Path::Resolver::SimpleEntity->new({ content_ref => \$content });
 }
 
-no Moose;
-no Moose::Util::TypeConstraints;
-__PACKAGE__->meta->make_immutable;
+1;
