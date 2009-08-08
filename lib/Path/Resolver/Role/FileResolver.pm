@@ -11,6 +11,22 @@ use Path::Resolver::CustomConverter;
 
 use MooseX::Types;
 
+=head1 SYNOPSIS
+
+The FileResolver role is a specialized form of the Resolver role, and can be
+used in its place.  (Anything that does the FileResolver role automatically
+does the Resolver role, too.)
+
+FileResolver classes have a native type of Path::Resolver::Types::AbsFilePath
+(from L<Path::Resolver::Types>).  Basically, they will natively return a
+Path::Class::File pointing to an absolute file path.
+
+FileResolver classes also have a default converter that will convert the
+AbsFilePath to a L<Path::Resolver::SimpleEntity>, meaning that by default a
+FileResolver's C<entity_at> will return a SimpleEntity.
+
+=cut
+
 sub native_type { AbsFilePath }
 
 my $converter = Path::Resolver::CustomConverter->new({
