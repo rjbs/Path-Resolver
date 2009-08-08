@@ -8,17 +8,32 @@ use namespace::autoclean;
 use Moose::Util::TypeConstraints;
 use Path::Resolver::SimpleEntity;
 
-sub native_type { class_type('Path::Resolver::SimpleEntity') }
+=head1 SYNOPSIS
 
-use Carp ();
+  my $resolver = Path::Resolver::Resolver::Hash->new({
+    hash => {
+      foo => {
+        'bar.txt' => "This is the content.\n",
+      },
+    }
+  });
+
+  my $simple_entity = $resolver->entity_for('foo/bar.txt');
+
+This resolver looks through a has to find string content.  Path parts are used
+to drill down through the hash.  The final result must be a string.
+
+The native type of the Hash resolver is a class type of
+Path::Resolver::SimpleEntity.  There is no default converter.
+
+=cut
+
+sub native_type { class_type('Path::Resolver::SimpleEntity') }
 
 =attr hash
 
 This is a hash reference in which lookups are performed.  References to copies
 of the string values are returned.
-
-In the future, nested hashes may emulate directories.  For now, this is not the
-case.
 
 =cut
 
@@ -40,7 +55,7 @@ sub entity_at {
   my @path = @$path;
   shift @path if $path[0] eq '';
 
-  my $cwd = $self->{hash};
+  my $cwd = $self->hash;
   my @path_so_far;
   while (defined (my $name = shift @path)) {
     push @path_so_far, $name;
@@ -50,16 +65,13 @@ sub entity_at {
     if (! @path) {
       return unless defined $entry;
 
+      # XXX: Should we return because we're at a notional -d instead of -f?
       return if ref $entry;
-      #Carp::confess("not a leaf entity: " . $self->__str_path(\@path_so_far))
-      #  if ref $entry;
 
       return Path::Resolver::SimpleEntity->new({ content_ref => \$entry });
     }
 
-    # Carp::confess("not a parent entity: " . $self->__str_path(\@path_so_far))
-    return 
-      unless ref $entry and ref $entry eq 'HASH';
+    return unless ref $entry and ref $entry eq 'HASH';
 
     $cwd = $entry;
   }
