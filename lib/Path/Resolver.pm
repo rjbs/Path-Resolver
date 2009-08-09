@@ -17,11 +17,10 @@ entities that may be found at those paths.  Here's a trivial example:
 
 Assuming it exists, this will return an object representing the file
 F</etc/postfix/main.cf>.  Using the code above, C<$file> would be a
-C<Path::Resolver::SimpleEntity> object, which has a C<content_ref> method.  We
+C<Path::Resolver::SimpleEntity> object, which has a C<content> method.  We
 could print the contents of the file to screen like this:
 
-  my $content_ref = $file->content_ref;
-  print $$content_ref;
+  print $file->content;
 
 =head1 WHAT'S THE POINT?
 

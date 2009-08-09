@@ -1,5 +1,8 @@
 Revision history for Path-Resolver
 
+{{$NEXT}}
+          documentation tweaks (thanks for feedback, Sartak)
+
 3.092200  2009-08-07
           major reworking
           entity_at method replaces content_at
