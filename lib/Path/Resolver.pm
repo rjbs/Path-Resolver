@@ -48,6 +48,24 @@ If it doesn't, it will look for F<foo/bar.txt> in the contents of the archive.
 If that's found, an entity will be returned.  Finally, if neither is found, it
 will return false.
 
+Alternately, you could multiplex based on path:
+
+  my $resolver = Path::Resolver::Resolver::Mux::Prefix->new({
+    config   => Path::Resolver::Resolver::FileSystem->new({
+      root => '/etc/my-app',
+    }),
+
+    template => Path::Resolver::Resolver::Mux::Ordered->new({
+      Path::Resolver::Resolver::DistDir->new({ module => 'MyApp' }),
+      Path::Resolver::Resolver::DataSection->new({ module => 'My::Framework' }),
+    }),
+  });
+
+The path F</config/main.cf> would be looked for on disk as
+F</etc/my-app/main.cf>.  The path F</template/main.html> would be looked for
+first as F<main.html> in the sharedir for MyApp and failing that in the DATA
+section of My::Framework.
+
 =head1 WHERE DO I GO NEXT?
 
 If you want to read about how to write a resolver, look at
