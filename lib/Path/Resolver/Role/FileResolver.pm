@@ -3,6 +3,7 @@ package Path::Resolver::Role::FileResolver;
 use Moose::Role;
 with 'Path::Resolver::Role::Resolver' => { excludes => 'default_converter' };
 
+use autodie;
 use namespace::autoclean;
 
 use Path::Resolver::SimpleEntity;
@@ -35,7 +36,7 @@ my $converter = Path::Resolver::CustomConverter->new({
   converter   => sub {
     my ($converter, $abs_path) = @_;
 
-    open my $fh, '<', "$abs_path" or Carp::confess("can't open $abs_path: $!");
+    open my $fh, '<:raw', "$abs_path";
     my $content = do { local $/; <$fh> };
     Path::Resolver::SimpleEntity->new({ content_ref => \$content });
   },
