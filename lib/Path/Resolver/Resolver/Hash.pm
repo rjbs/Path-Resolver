@@ -21,7 +21,9 @@ use Path::Resolver::SimpleEntity;
   my $simple_entity = $resolver->entity_for('foo/bar.txt');
 
 This resolver looks through a has to find string content.  Path parts are used
-to drill down through the hash.  The final result must be a string.
+to drill down through the hash.  The final result must be a string.  Unless you
+really know what you're doing, it should be a byte string and not a character
+string.
 
 The native type of the Hash resolver is a class type of
 Path::Resolver::SimpleEntity.  There is no default converter.

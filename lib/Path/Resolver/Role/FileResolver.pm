@@ -24,7 +24,10 @@ Path::Class::File pointing to an absolute file path.
 
 FileResolver classes also have a default converter that will convert the
 AbsFilePath to a L<Path::Resolver::SimpleEntity>, meaning that by default a
-FileResolver's C<entity_at> will return a SimpleEntity.
+FileResolver's C<entity_at> will return a SimpleEntity.  This entity will be
+constructed by reading the file B<in raw mode>.  In other words, it is the
+byte string contents of the file, not any decoded character string.  If you
+want to a Unicode string of a file's contents, you must decode it yourself.
 
 =cut
 
