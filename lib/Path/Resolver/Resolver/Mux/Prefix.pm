@@ -75,11 +75,11 @@ has prefixes => (
   is  => 'ro',
   isa => HashRef[ role_type('Path::Resolver::Role::Resolver') ],
   required  => 1,
-  metaclass => 'Collection::Hash',
-  provides  => {
-    get => 'get_resolver_for',
-    set => 'set_resolver_for',
-    delete => 'delete_resolver_for',
+  traits => ['Hash'],
+  handles  => {
+    get_resolver_for => 'get',
+    set_resolver_for => 'set',
+    delete_resolver_for => 'delete',
   },
 );
 
