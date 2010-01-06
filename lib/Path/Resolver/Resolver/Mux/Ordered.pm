@@ -50,10 +50,10 @@ has resolvers => (
   isa => ArrayRef[ role_type('Path::Resolver::Role::Resolver') ],
   required   => 1,
   auto_deref => 1,
-  metaclass => 'Collection::Array',
-  provides  => {
-    push    => 'push_resolver',
-    unshift => 'unshift_resolver',
+  traits => ['Array'],
+  handles  => {
+    push_resolver => 'push',
+    unshift_resolver => 'unshift',
   },
 );
 
