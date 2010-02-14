@@ -18,7 +18,7 @@ use Path::Resolver::SimpleEntity;
     }
   });
 
-  my $simple_entity = $resolver->entity_for('foo/bar.txt');
+  my $simple_entity = $resolver->entity_at('foo/bar.txt');
 
 This resolver looks through a has to find string content.  Path parts are used
 to drill down through the hash.  The final result must be a string.  Unless you

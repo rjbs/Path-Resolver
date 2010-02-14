@@ -13,7 +13,7 @@ use Path::Class::File;
 
   my $resolver = Path::Resolver::Resolver::AnyDist->new;
 
-  my $simple_entity = $resolver->entity_for('/MyApp-Config/foo/bar.txt');
+  my $simple_entity = $resolver->entity_at('/MyApp-Config/foo/bar.txt');
 
 This resolver looks for files on disk in the shared resource directory of the
 distribution named by the first part of the path.  For more information on

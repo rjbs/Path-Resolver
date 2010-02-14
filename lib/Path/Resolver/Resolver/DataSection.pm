@@ -17,7 +17,7 @@ sub native_type { class_type('Path::Resolver::SimpleEntity') }
     module => 'YourApp::Config::InData',
   });
 
-  my $simple_entity = $resolver->entity_for('foo/bar.txt');
+  my $simple_entity = $resolver->entity_at('foo/bar.txt');
 
 This class assumes that you will give it the name of another package and that
 that package uses L<Data::Section|Data::Section> to retrieve named content from

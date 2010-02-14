@@ -17,7 +17,7 @@ use MooseX::Types::Moose qw(Any HashRef);
     },
   });
 
-  my $simple_entity = $resolver->entity_for('foo/bar.txt');
+  my $simple_entity = $resolver->entity_at('foo/bar.txt');
 
 This resolver looks at the first part of paths it's given to resolve.  It uses
 that part to find a resolver (by looking it up in the C<prefixes>) and then

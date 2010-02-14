@@ -18,7 +18,7 @@ use MooseX::Types::Moose qw(Any ArrayRef);
     ],
   });
 
-  my $simple_entity = $resolver->entity_for('foo/bar.txt');
+  my $simple_entity = $resolver->entity_at('foo/bar.txt');
 
 This resolver looks in each of its resolvers in order and returns the result of
 the first of its sub-resolvers to find the named entity.  If no entity is

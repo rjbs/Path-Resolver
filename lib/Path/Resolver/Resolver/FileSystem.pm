@@ -15,7 +15,7 @@ use File::Spec;
     root => '/etc/myapp_config',
   });
 
-  my $simple_entity = $resolver->entity_for('foo/bar.txt');
+  my $simple_entity = $resolver->entity_at('foo/bar.txt');
 
 This resolver looks for files on disk under the given root directory.
 

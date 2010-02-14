@@ -16,7 +16,7 @@ use Path::Resolver::SimpleEntity;
     archive => 'archive-file.tar.gz',
   });
 
-  my $simple_entity = $resolver->entity_for('foo/bar.txt');
+  my $simple_entity = $resolver->entity_at('foo/bar.txt');
 
 This resolver looks for files inside a tar archive or a compressed tar archive.
 It uses L<Archive::Tar|Archive::Tar>, and can read any archive understood by

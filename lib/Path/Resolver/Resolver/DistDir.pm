@@ -14,7 +14,7 @@ use File::Spec;
     dist_name => 'YourApp-Files',
   });
 
-  my $simple_entity = $resolver->entity_for('foo/bar.txt');
+  my $simple_entity = $resolver->entity_at('foo/bar.txt');
 
 This resolver looks for files on disk in the shared resource directory of the
 named distribution.  For more information on sharedirs, see
