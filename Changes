@@ -1,6 +1,9 @@
 Revision history for Path-Resolver
 
 {{$NEXT}}
+          use -excludes rather than excludes in role application
+
+3.100450  2010-02-14 14:58:29 America/New_York
           documentation tweaks (thanks for feedback, Sartak, RSAVAGE)
 
 3.092200  2009-08-07

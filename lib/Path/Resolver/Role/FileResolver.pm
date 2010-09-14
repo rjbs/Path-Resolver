@@ -1,7 +1,7 @@
 package Path::Resolver::Role::FileResolver;
 # ABSTRACT: a resolver that natively finds absolute file paths
 use Moose::Role;
-with 'Path::Resolver::Role::Resolver' => { excludes => 'default_converter' };
+with 'Path::Resolver::Role::Resolver' => { -excludes => 'default_converter' };
 
 use autodie;
 use namespace::autoclean;
