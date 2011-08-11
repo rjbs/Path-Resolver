@@ -63,7 +63,17 @@ This method gets the resolver for the named prefix.
 
 =method set_resolver_for
 
-This method sets the resolver for the named prefix.
+This method sets the resolver for the named prefix, replacing any that already
+existed.
+
+=method add_resolver_for
+
+This method sets the resolver for the named prefix, throwing an exception if
+one already exists.
+
+=method has_resolver_for
+
+This method returns true if a resolver exists for the given prefix.
 
 =method delete_resolver_for
 
@@ -74,14 +84,21 @@ This method deletes the resolver for the named prefix.
 has prefixes => (
   is  => 'ro',
   isa => HashRef[ role_type('Path::Resolver::Role::Resolver') ],
-  required  => 1,
-  traits => ['Hash'],
+  required => 1,
+  traits   => ['Hash'],
   handles  => {
     get_resolver_for => 'get',
     set_resolver_for => 'set',
+    add_resolver_for => 'set',
+    has_resolver_for => 'exists',
     delete_resolver_for => 'delete',
   },
 );
+
+before add_resolver_for => sub {
+  confess "a resolver for $_[1] already exists"
+    if $_[0]->has_resolver_for($_[1]);
+};
 
 has native_type => (
   is  => 'ro',
