@@ -4,7 +4,6 @@ use Moose;
 
 use namespace::autoclean;
 
-use MooseX::AttributeHelpers;
 use MooseX::Types;
 use MooseX::Types::Moose qw(Any ArrayRef);
 
