@@ -1,6 +1,8 @@
 Revision history for Path-Resolver
 
 {{$NEXT}}
+
+3.100453  2013-08-12 21:45:38 America/New_York
           drop use of AttributeHandlers
 
 3.100452  2011-08-11 16:30:34 America/New_York
