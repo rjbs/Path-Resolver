@@ -1,6 +1,8 @@
 Revision history for Path-Resolver
 
 {{$NEXT}}
+
+3.100455  2022-12-31 13:59:41-05:00 America/New_York
         - update packaging and metadata
         - minimum required Perl is now v5.12
 
