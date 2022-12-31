@@ -1,6 +1,8 @@
 Revision history for Path-Resolver
 
 {{$NEXT}}
+        - update packaging and metadata
+        - minimum required Perl is now v5.12
 
 3.100454  2013-10-09 17:09:18 America/New_York
           update bugtracker and repo
